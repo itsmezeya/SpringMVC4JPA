@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:ctx="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        ">
+	
+	<ctx:component-scan base-package="com.lnt.hr.daos, com.lnt.hr.services" />
+	
+	<bean id="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+		<property name="url" value="jdbc:mysql://localhost:3306/hdata" />
+	</bean>
+	
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+			<property  name="packagesToScan" value="com.lnt.hr.beans"/>
+			<property name="dataSource" ref="ds" />
+			<property name="jpaVendorAdapter">
+					<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+						<property name="generateDdl" value="false" />
+						<property name="showSql" value="true" />
+					</bean>
+			</property> 
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" /> 
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	</beans>
